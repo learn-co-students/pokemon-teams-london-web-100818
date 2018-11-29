@@ -4,16 +4,6 @@ const renderTrainerCards = trainers => {
   trainers.forEach(renderTrainerCard)
 }
 
-const makeDeleteCallback = (trainer, pokemonList) => (listEl, pokemonToDelete) => {
-  // update it in the backend
-  deletePokemon(pokemonToDelete)
-  // remove pokemon from trainer.pokemons    
-  trainer.pokemons = trainer.pokemons.filter(pokemon => pokemon.id !== pokemonToDelete.id)
-  console.log(trainer.pokemons)
-  // remove listEl
-  pokemonList.removeChild(listEl)
-}
-
 const renderTrainerCard = trainer => {
   const cardDiv = document.createElement('div')
   cardDiv.className = "card"
@@ -28,11 +18,14 @@ const renderTrainerCard = trainer => {
   const pokemonList = document.createElement('ul')
   cardDiv.appendChild(pokemonList)
   
-  const deletePokemonCallback = makeDeleteCallback(trainer, pokemonList)
+  const deletePokemonCallback = (listEl, pokemonToDelete) => {
+    deletePokemon(pokemonToDelete)
+    trainer.pokemons = trainer.pokemons.filter(pokemon => pokemon.id !== pokemonToDelete.id)
+    pokemonList.removeChild(listEl)
+  }
   
   const createPokemonCallback = pokemon => {
     trainer.pokemons.push(pokemon)
-    console.log(trainer.pokemons)
     renderPokemon(pokemonList, pokemon, deletePokemonCallback)
   }
 
